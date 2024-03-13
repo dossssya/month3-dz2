@@ -27,30 +27,3 @@ function animate() {
     }
 }
 requestAnimationFrame(animate);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let count = 0
-// const recursionCount = () => {
-//     count++
-//     console.log(count)
-//
-//     if (count < 500){
-//         recursionCount()
-//     } else {
-//         console.log('все конец! парапарапам')
-//     }
-//
-// }
-// recursionCount()
