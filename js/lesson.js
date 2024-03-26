@@ -119,5 +119,48 @@ request.onload = () => {
 };
 
 
+// Card Switcher
+
+const cardBlock = document.querySelector('.card');
+const btnPrev = document.querySelector('#btn-prev');
+const btnNext = document.querySelector('#btn-next');
+
+let count = 1;
+const totalCards = 200;
+
+function fetchCard(cardNumber) {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${cardNumber}`)
+        .then(response => response.json())
+        .then(data => {
+            cardBlock.innerHTML = `
+                <p>${data.title}</p>
+                <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
+                <span>${data.id}</span>
+            `;
+        });
+}
+
+function updateCard(direction) {
+    if (direction === 'prev') {
+        count = (count === 1) ? totalCards : count - 1;
+    } else if (direction === 'next') {
+        count = (count === totalCards) ? 1 : count + 1;
+    }
+
+    fetchCard(count);
+}
+
+btnPrev.onclick = () => updateCard('prev');
+btnNext.onclick = () => updateCard('next');
+
+fetchCard(count);
+
+// fetch запрос
+fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(response => response.json())
+    .then(data => {
+        console.log("Data from 'https://jsonplaceholder.typicode.com/posts':", data);
+    });
+
 
 
