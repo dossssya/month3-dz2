@@ -1,20 +1,30 @@
 // PHONE CHACKER
 
-const phoneInput = document.querySelector('#phone_input')
-const phoneButton = document.querySelector('#phone_button')
-const phoneSpan = document.querySelector('#phone_result')
+const phoneInput = document.querySelector('#phone_input');
+const phoneButton = document.querySelector('#phone_button');
+const phoneSpan = document.querySelector('#phone_result');
 
-const regExp = /^\+996 [2579]\d{2} \d{2}-\d{2}-\d{2}$/
+const regExp = /^\+996 [2579]\d{2} \d{2}-\d{2}-\d{2}$/;
 
-phoneButton.addEventListener('click', () =>{
-    if (regExp.test(phoneInput.value.trim())) {
-        phoneSpan.innerHTML = 'OK'
-        phoneSpan.style.color = 'green'
+const validatePhone = () => {
+    const phoneNumber = phoneInput.value.trim();
+    if (regExp.test(phoneNumber)) {
+        phoneSpan.innerHTML = 'OK';
+        phoneSpan.style.color = 'green';
     } else {
-        phoneSpan.innerHTML = 'NOT OK'
-        phoneSpan.style.color = 'red'
+        phoneSpan.innerHTML = 'NOT OK';
+        phoneSpan.style.color = 'red';
     }
-})
+};
+
+phoneButton.addEventListener('click', () => {
+    try {
+        validatePhone();
+    } catch (error) {
+        console.error('Error validating phone number:', error);
+    }
+});
+
 
 // TAB SLIDER
 const tabContent = document.querySelectorAll('.tab_content_block');
@@ -46,19 +56,6 @@ const nextTab = () => {
 hideTabContent();
 showTabContent();
 
-tabsParent.onclick = (event) => {
-    if (event.target.classList.contains('tab_content_item')) {
-        tabs.forEach((tab, tabIndex) => {
-            if (event.target === tab) {
-                hideTabContent();
-                currentIndex = tabIndex;
-                showTabContent(tabIndex);
-            }
-        });
-    }
-};
-
-
 const startAutoSlide = () => {
     intervalId = setInterval(nextTab, 3000);
 };
@@ -67,11 +64,28 @@ const stopAutoSlide = () => {
     clearInterval(intervalId);
 };
 
-startAutoSlide();
+const fetchDataTab = async () => {
+    try {
+        startAutoSlide();
+    } catch (error) {
+        console.error('Error starting auto slide:', error);
+    }
+};
 
+fetchDataTab();
 
-tabsParent.addEventListener('click', stopAutoSlide);
-
+tabsParent.addEventListener('click', (event) => {
+    if (event.target.classList.contains('tab_content_item')) {
+        tabs.forEach((tab, tabIndex) => {
+            if (event.target === tab) {
+                hideTabContent();
+                currentIndex = tabIndex;
+                showTabContent(tabIndex);
+            }
+        });
+        stopAutoSlide(); // Остановить автоматическое переключение при клике на вкладку
+    }
+});
 
 tabs.forEach((tab) => {
     tab.addEventListener('click', startAutoSlide);
@@ -106,17 +120,23 @@ const converter = (element, targetElement1, targetElement2, current, data) => {
     };
 };
 
-const request = new XMLHttpRequest();
-request.open('GET', '../data/converter.json');
-request.setRequestHeader('Content-type', 'application/json');
-request.send();
+async function fetchDataConverter() {
+    try {
+        const response = await fetch('../data/converter.json');
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        converter(somInput, usdInput, eurInput, 'som', data);
+        converter(usdInput, eurInput, somInput, 'usd', data);
+        converter(eurInput, usdInput, somInput, 'eur', data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
-request.onload = () => {
-    const data = JSON.parse(request.response);
-    converter(somInput, usdInput, eurInput, 'som', data);
-    converter(usdInput, eurInput, somInput, 'usd', data);
-    converter(eurInput, usdInput, somInput, 'eur', data);
-};
+fetchDataConverter();
+
 
 
 // Card Switcher
@@ -128,16 +148,18 @@ const btnNext = document.querySelector('#btn-next');
 let count = 1;
 const totalCards = 200;
 
-function fetchCard(cardNumber) {
-    fetch(`https://jsonplaceholder.typicode.com/todos/${cardNumber}`)
-        .then(response => response.json())
-        .then(data => {
-            cardBlock.innerHTML = `
-                <p>${data.title}</p>
-                <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
-                <span>${data.id}</span>
-            `;
-        });
+async function fetchCard(cardNumber) {
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${cardNumber}`);
+        const data = await response.json();
+        cardBlock.innerHTML = `
+            <p>${data.title}</p>
+            <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
+            <span>${data.id}</span>
+        `;
+    } catch (error) {
+        console.error('Error fetching card data:', error);
+    }
 }
 
 function updateCard(direction) {
@@ -156,11 +178,38 @@ btnNext.onclick = () => updateCard('next');
 fetchCard(count);
 
 // fetch запрос
-fetch('https://jsonplaceholder.typicode.com/posts')
-    .then(response => response.json())
-    .then(data => {
+async function fetchData() {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts');
+        const data = await response.json();
         console.log("Data from 'https://jsonplaceholder.typicode.com/posts':", data);
-    });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
+
+//weather
 
 
 
+const searchInput = document.querySelector('.cityName')
+const city = document.querySelector('.city')
+const temp = document.querySelector('.temp')
+
+const API_KEY = 'e417df62e04d3b1b111abeab19cea714'
+const URL = 'http://api.openweathermap.org/data/2.5/weather'
+
+const citySearch = () => {
+    searchInput.oninput = async (event) => {
+        try {
+            const response = await fetch(`${URL}?q=${event.target.value}&appid=${API_KEY}`)
+            const data = await response.json()
+            city.innerHTML = data.name ? data.name : 'Город не найден...'
+            temp.innerHTML = data.main?.temp ? Math.round(data.main?.temp - 273) + '&deg;C' : "..."
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+citySearch()
