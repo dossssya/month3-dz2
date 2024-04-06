@@ -32,8 +32,8 @@ const isAtEndOfPage = () => {
     return window.innerHeight + window.scrollY >= document.body.offsetHeight;
 };
 
-window.addEventListener('scroll', () => {
-    if (!isModalShown && isAtEndOfPage()) {
-        openModal();
-    }
-});
+// window.addEventListener('scroll', () => {
+//     if (!isModalShown && isAtEndOfPage()) {
+//         openModal();
+//     }
+// });

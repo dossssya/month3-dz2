@@ -1,4 +1,42 @@
 /* HEADER */
+/* Общие стили для мобильных устройств */
+@media only screen and (max-width: 768px) {
+    .logotype {
+        font-size: 18px;
+    }
+
+    .menu {
+        display: none; /* Скрыть основное меню на маленьких экранах */
+    }
+
+    .menu_toggle {
+        display: block; /* Показать кнопку меню на мобильных экранах */
+    }
+
+    .container {
+        width: 90%; /* Уменьшить ширину контейнера для лучшего масштабирования */
+    }
+
+    .main_block h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .slider {
+        height: 200px;
+    }
+
+    .slide_card {
+        width: 90%;
+    }
+}
+
+/* Дополнительные стили для главной страницы на маленьких экранах */
+@media only screen and (max-width: 600px) {
+    .main_block h1 {
+        font-size: 20px;
+    }
+}
 
 .header {
     height: 80px;
@@ -72,6 +110,18 @@
 }
 
 /* FOOTER */
+/* Стили для футера на мобильных устройствах */
+@media only screen and (max-width: 768px) {
+    /* Пример: уменьшить размер текста в футере */
+    .footer_text {
+        font-size: 14px;
+    }
+
+    /* Пример: изменить выравнивание элементов в футере */
+    .footer_links {
+        text-align: center;
+    }
+}
 
 .footer {
     background: #2c2d2f;
@@ -164,6 +214,18 @@
 }
 
 /* MODAL */
+/* Стили для модального окна на мобильных устройствах */
+@media only screen and (max-width: 768px) {
+    /* Пример: уменьшить отступы в модальном окне */
+    .modal_content {
+        padding: 20px;
+    }
+
+    /* Пример: изменить размеры элементов в модальном окне */
+    .modal_input {
+        width: 90%;
+    }
+}
 
 .modal {
     position: fixed;
@@ -425,4 +487,7 @@
     }
     100% {
     }
+}
+.text {
+    margin-bottom: 50px;
 }

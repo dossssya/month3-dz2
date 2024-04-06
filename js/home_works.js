@@ -22,10 +22,10 @@ let directionX = 1;
 let directionY = 0;
 
 function animate() {
-    if (distanceX >= 447 && directionX === 1) {
+    if (distanceX >= 465 && directionX === 1) {
         directionX = 0;
         directionY = 1;
-    } else if (distanceY >= 447 && directionY === 1) {
+    } else if (distanceY >= 465 && directionY === 1) {
         directionX = -1;
         directionY = 0;
     } else if (distanceX <= 0 && directionX === -1) {
@@ -36,8 +36,8 @@ function animate() {
         directionY = 0;
     }
 
-    distanceX += directionX * 4;
-    distanceY += directionY * 4;
+    distanceX += directionX * 8;
+    distanceY += directionY * 8;
 
     childBlock.style.left = distanceX + 'px';
     childBlock.style.top = distanceY + 'px';
